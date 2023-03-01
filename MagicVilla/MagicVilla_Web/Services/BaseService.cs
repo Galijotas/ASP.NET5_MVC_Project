@@ -24,12 +24,12 @@ namespace MagicVilla_Web.Services
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
                 message.RequestUri = new Uri(apiRequest.Url);
-                if(apiRequest.Data != null) 
+                if (apiRequest.Data != null)
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data),
                         Encoding.UTF8, "application/json");
                 }
-                switch(apiRequest.ApiType) 
+                switch (apiRequest.ApiType)
                 {
                     case StaticDetails.ApiType.POST:
                         message.Method = HttpMethod.Post;
@@ -62,10 +62,11 @@ namespace MagicVilla_Web.Services
                 {
                     ErrorMessages = new List<string> { Convert.ToString(ex.Message) },
                     IsSuccess = false
-            };
+                };
                 var res = JsonConvert.SerializeObject(dto);
-                var APIResponse = JsonConvert.DeserializeObject<T> (res);
+                var APIResponse = JsonConvert.DeserializeObject<T>(res);
                 return APIResponse;
+            }
         }
     }
 }
