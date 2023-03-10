@@ -6,8 +6,9 @@ using System.Net;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
-    [Route("api/UsersAuth")]
+    [Route("api/v{version:apiVersion}/UsersAuth")]
     [ApiController]
+    [ApiVersionNeutral]
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -16,21 +17,21 @@ namespace MagicVilla_VillaAPI.Controllers
         public UsersController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            this._response= new APIResponse();
+            _response = new APIResponse();
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO model)
         {
             var loginResponse = await _userRepository.Login(model);
-            if (loginResponse.User == null || string.IsNullOrEmpty(loginResponse.Token)) 
+            if (loginResponse.User == null || string.IsNullOrEmpty(loginResponse.Token))
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
                 _response.ErrorMessages.Add("Username or password is incorrect");
                 return BadRequest(_response);
             }
-            
+
             _response.IsSuccess = true;
             _response.StatusCode = HttpStatusCode.OK;
             _response.Result = loginResponse;
@@ -50,7 +51,7 @@ namespace MagicVilla_VillaAPI.Controllers
             }
 
             var user = await _userRepository.Register(model);
-            if (user == null) 
+            if (user == null)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
